@@ -1,0 +1,268 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$ref": "#/definitions/root",
+  "definitions": {
+    "root": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "parameters": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "framework": {
+          "$ref": "#/definitions/framework"
+        }
+      }
+    },
+    "framework": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "secret": {
+          "type": "string"
+        },
+        "http_method_override": {
+          "type": "boolean",
+          "description": "Set true to enable support for the '_method' request parameter to determine the intended HTTP method on POST requests. Note: When using the HttpCache, you need to call the method in your front controller instead",
+          "default": false
+        },
+        "trust_x_sendfile_type_header": {
+          "type": "boolean",
+          "description": "Set true to enable support for xsendfile in binary file responses.",
+          "default": false
+        },
+        "ide": {
+          "type": "string"
+        },
+        "test": {
+          "type": "boolean",
+          "default": false
+        },
+        "default_locale": {
+          "type": "string",
+          "default": "en"
+        },
+        "set_locale_from_accept_language": {
+          "type": "boolean",
+          "description": "Whether to use the Accept-Language HTTP header to set the Request locale (only when the \"_locale\" request attribute is not passed).",
+          "default": false
+        },
+        "set_content_language_from_locale": {
+          "type": "boolean",
+          "description": "Whether to set the Content-Language HTTP header on the Response using the Request locale.",
+          "default": false
+        },
+        "enabled_locales": {
+          "type": "array",
+          "description": "Defines the possible locales for the application. This list is used for generating translations files, but also to restrict which locales are allowed when it is set from Accept-Language header (using \"set_locale_from_accept_language\").",
+          "items": {
+            "type": "string"
+          }
+        },
+        "trusted_hosts": {
+          "type": "array",
+          "description": "Defines a list of trusted hosts. If the current host is not in this list, a redirect is performed to the canonical hostname.",
+          "items": {
+            "type": "string"
+          },
+          "examples": [
+            [
+              "^example\\.com$",
+              "^example\\.org$"
+            ]
+          ]
+        },
+        "trusted_proxies": {
+          "type": "string",
+          "description": "Defines a list of trusted proxies. Trusted proxies can spoof client IP addresses. If you are using Amazon ELB load balancers, you should add the IP address of the load balancer(s) to this list so that the client IP address is set correctly.",
+          "examples": [
+            "192.0.0.1,10.0.0.0/8"
+          ]
+        },
+        "trusted_headers": {
+          "type": "array",
+          "description": "Defines a list of trusted headers. If your application is behind a load balancer or a reverse proxy, you must list the proxy IP in this list to make the request attributes (getClientIp(), getProtocol(), getHost(), getPort()) work correctly.",
+          "items": {
+            "type": "string"
+          },
+          "enum": [
+            "x-forwarded-for",
+            "x-forwarded-host",
+            "x-forwarded-proto",
+            "x-forwarded-port",
+            "x-forwarded-prefix"
+          ]
+        },
+        "error_controller": {
+          "type": "string",
+          "description": "Defines the controller to use as the error controller when the framework catches an exception or an error is triggered by calling the error() method on the container.",
+          "examples": [
+            "App\\Controller\\ErrorController::showAction"
+          ]
+        },
+        "handle_all_throwables": {
+          "type": "boolean",
+          "description": "HttpKernel will handle all kinds of \\Throwable",
+          "default": false
+        },
+        "csrf_protection": {
+          "$ref": "#/definitions/csrf_protection"
+        },
+        "form": {
+          "$ref": "#/definitions/form"
+        },
+        "http_cache": {
+          "$ref": "#/definitions/http_cache"
+        },
+        "esi": {
+          "type": "boolean",
+          "default": false
+        },
+        "ssi": {
+          "type": "boolean",
+          "default": false
+        },
+        "fragments": {
+          "$ref": "#/definitions/fragments"
+        },
+        "profiler": {
+          "$ref": "#/definitions/profiler"
+        }
+      }
+    },
+    "csrf_protection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enables the CSRF protection globally.",
+          "default": false
+        }
+      }
+    },
+    "form": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "csrf_protection": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enables the CSRF protection globally.",
+              "default": false
+            },
+            "field_name": {
+              "type": "string",
+              "description": "The name of the hidden HTML field used for CSRF protection.",
+              "default": "_token"
+            }
+          }
+        },
+        "legacy_error_messages": {
+          "type": "boolean",
+          "description": "Enables/disables the legacy form error messages.",
+          "default": false,
+          "deprecationMessage": "Deprecated since Symfony 6.2"
+        }
+      }
+    },
+    "http_cache": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "debug": {
+          "type": "boolean",
+          "description": "Enables debugging mode.",
+          "default": false
+        },
+        "trace_level": {
+          "type": "string",
+          "enum": [
+            "none",
+            "short",
+            "full"
+          ]
+        },
+        "trace_header": {
+          "type": "string"
+        },
+        "default_ttl": {
+          "type": "integer",
+          "description": "The default TTL applied to all responses when the response does not have any Cache-Control directive defined."
+        },
+        "private_headers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skip_response_headers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allow_reload": {
+          "type": "boolean"
+        },
+        "allow_revalidate": {
+          "type": "boolean"
+        },
+        "stale_while_revalidate": {
+          "type": "boolean"
+        },
+        "stale_if_error": {
+          "type": "boolean"
+        },
+        "terminate_on_cache_hit": {
+          "type": "boolean"
+        }
+      }
+    },
+    "fragments": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "hinclude_default_template": {
+          "type": "string"
+        }
+      }
+    },
+    "profiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "collect": {
+          "type": "boolean",
+          "default": false
+        },
+        "collect_parameter": {
+          "type": "string"
+        },
+        "only_exceptions": {
+          "type": "boolean",
+          "default": false
+        },
+        "only_main_requests": {
+          "type": "boolean",
+          "default": false
+        },
+        "dsn": {
+          "type": "string",
+          "default": "file:%kernel.cache_dir%/profiler"
+        },
+        "collect_serializer_data": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  }
+}
